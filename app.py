@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import time
-from ai_engine import mock_ai_generate, send_mock_email
+from ai_engine import mock_ai_generate, send_real_email
 
 st.set_page_config(page_title="OutreachAI", page_icon="✉️", layout="wide")
 
@@ -16,6 +16,11 @@ base_template = st.sidebar.text_area(
     "Please let me know if you need to schedule office hours. Best, Ms. Teacher",
     height=300
 )
+
+st.sidebar.header("SMTP Configuration")
+st.sidebar.markdown("*(To actually send emails, enter your Gmail Address and App Password here)*")
+sender_email = st.sidebar.text_input("Your Gmail Address")
+sender_password = st.sidebar.text_input("Your Gmail App Password", type="password")
 
 # 2. Main Area for File Upload
 st.header("2. Upload Your Students Data")
@@ -103,21 +108,35 @@ if "final_df" in st.session_state:
         
     with col2:
         if st.button("📨 Send Selected Emails NOW!"):
-            selected_rows = edited_df[edited_df["Select"] == True]
-            num_selected = len(selected_rows)
-            
-            if num_selected == 0:
-                st.warning("No students selected!")
+            if not sender_email or not sender_password:
+                st.error("⚠️ Please enter your Gmail Address and App Password in the sidebar to send emails.")
             else:
-                progress_bar_send = st.progress(0)
-                status_text_send = st.empty()
+                selected_rows = edited_df[edited_df["Select"] == True]
+                num_selected = len(selected_rows)
                 
-                for idx, (index, row) in enumerate(selected_rows.iterrows()):
-                    progress = (idx + 1) / num_selected
-                    progress_bar_send.progress(progress)
-                    status_text_send.text(f"Sending to {row['Name']} ({row['Email']})...")
+                if num_selected == 0:
+                    st.warning("No students selected!")
+                else:
+                    progress_bar_send = st.progress(0)
+                    status_text_send = st.empty()
                     
-                    # Call our mock send function
-                    send_mock_email(row['Email'], base_subject, row['Generated_Email'])
-                    
-                st.success(f"Successfully sent {num_selected} emails!")
+                    success_count = 0
+                    for idx, (index, row) in enumerate(selected_rows.iterrows()):
+                        progress = (idx + 1) / num_selected
+                        progress_bar_send.progress(progress)
+                        status_text_send.text(f"Sending to {row['Name']} ({row['Email']})...")
+                        
+                        # Call real SMTP function
+                        success, message = send_real_email(
+                            sender_email, 
+                            sender_password, 
+                            row['Email'], 
+                            base_subject, 
+                            row['Generated_Email']
+                        )
+                        if success:
+                            success_count += 1
+                        else:
+                            st.error(f"Failed sending to {row['Email']}: {message}")
+                            
+                    st.success(f"Successfully sent {success_count} isolated emails!")

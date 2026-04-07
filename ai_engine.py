@@ -66,19 +66,28 @@ def process_students(csv_path, base_template):
     df['Generated_Email'] = generated_emails
     return df
 
-def send_mock_email(to_email, subject, body):
+import smtplib
+from email.message import EmailMessage
+
+def send_real_email(sender_email, sender_password, to_email, subject, body):
     """
-    Simulates sending an email via SMTP.
-    In the real version, you'd use smtplib and email.mime modules.
+    Sends an actual email using Python's smtplib via Gmail.
     """
-    print(f"Connecting to SMTP server...")
-    time.sleep(0.3)
-    print(f"Sending email to: {to_email}")
-    print(f"Subject: {subject}")
-    print(f"Body snippet: {body[:30]}...")
-    time.sleep(0.5)
-    print("Sent successfully!\n")
-    return True
+    try:
+        msg = EmailMessage()
+        msg.set_content(body)
+        msg['Subject'] = subject
+        msg['From'] = sender_email
+        msg['To'] = to_email
+
+        # Connect to Gmail SMTP server
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.login(sender_email, sender_password)
+        server.send_message(msg)
+        server.quit()
+        return True, "Sent successfully"
+    except Exception as e:
+        return False, str(e)
 
 if __name__ == "__main__":
     # Test script execution
