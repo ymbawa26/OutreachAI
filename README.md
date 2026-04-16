@@ -4,9 +4,11 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 ![LLM Workflow](https://img.shields.io/badge/Workflow-AI%20assisted-brightgreen?style=for-the-badge)
 
-OutreachAI is a Streamlit app for generating personalized outreach emails from a CSV instead of writing every message by hand.
+OutreachAI is a personalized outreach generator that turns a CSV and a base message into individual email drafts.
 
 It is designed for cases where one message template needs to adapt to many recipients without losing individual context.
+
+[Try the browser demo](https://ymbawa26.github.io/OutreachAI/)
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ymbawa26/OutreachAI)
 
@@ -41,6 +43,12 @@ Then open `http://localhost:8501`.
 4. Start the app with `streamlit run app.py`.
 5. Open the forwarded Streamlit port.
 
+### Option 3: Use the browser demo
+
+If you just want to understand the product quickly from another computer, use the public browser demo above.
+
+The hosted demo is intentionally client-side and uses the same mock generation logic as the local Python version. It is meant for product exploration, not real SMTP sending.
+
 ## Included Demo Data
 
 The repo includes `sample_students.csv`, which gives the app a ready-to-use dataset for testing the personalization flow.
@@ -70,4 +78,4 @@ That means the product architecture is real, while the generation backend is int
 
 This is a working demoable prototype.
 
-It is best experienced locally or in Codespaces. A public hosted demo is not set up in this repository right now.
+It now has a lightweight public browser demo for quick evaluation, while the full Streamlit flow is still available locally and in Codespaces.

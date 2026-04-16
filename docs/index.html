@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OutreachAI Demo</title>
+    <meta
+      name="description"
+      content="Browser demo for OutreachAI, a personalized outreach draft generator that turns CSV context into individual messages."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">OutreachAI</p>
+          <h1>Turn one outreach template into personalized drafts in the browser.</h1>
+          <p class="lede">
+            This public demo mirrors the repo's mock AI workflow so visitors can try the product idea
+            instantly from any computer.
+          </p>
+          <div class="hero-actions">
+            <button id="load-sample" class="button button-primary" type="button">Load sample students</button>
+            <label class="button button-secondary" for="csv-upload">Upload CSV</label>
+            <input id="csv-upload" type="file" accept=".csv" hidden />
+          </div>
+          <p class="microcopy">
+            Required columns: <code>Name</code>, <code>Email</code>, <code>Class</code>,
+            <code>Recent Grade</code>, <code>Personal Note</code>
+          </p>
+        </div>
+        <aside class="hero-panel">
+          <p class="panel-label">Public demo mode</p>
+          <ul class="fact-list">
+            <li>Runs fully client-side</li>
+            <li>Uses the same mock personalization logic as the Python app</li>
+            <li>Generates drafts and downloadable CSVs</li>
+            <li>Does not send real email from the browser demo</li>
+          </ul>
+        </aside>
+      </header>
+
+      <main class="content-grid">
+        <section class="card template-card">
+          <div class="section-heading">
+            <p class="step">1. Base template</p>
+            <h2>Set the subject and main message</h2>
+          </div>
+
+          <label class="field">
+            <span>Subject line</span>
+            <input id="subject-input" type="text" value="Checking in on your progress!" />
+          </label>
+
+          <label class="field">
+            <span>Main message</span>
+            <textarea id="template-input" rows="8">Please let me know if you need to schedule office hours. Best, Ms. Teacher</textarea>
+          </label>
+        </section>
+
+        <section class="card data-card">
+          <div class="section-heading">
+            <p class="step">2. Student data</p>
+            <h2>Preview the uploaded roster</h2>
+          </div>
+          <div id="data-state" class="empty-state">
+            Load the built-in sample data or upload a CSV to begin.
+          </div>
+          <div id="table-wrapper" class="table-wrapper hidden">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Class</th>
+                  <th>Recent Grade</th>
+                  <th>Personal Note</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card generate-card">
+          <div class="section-heading">
+            <p class="step">3. Draft generation</p>
+            <h2>Generate personalized emails</h2>
+          </div>
+          <div class="action-row">
+            <button id="generate-button" class="button button-primary" type="button" disabled>
+              Generate drafts
+            </button>
+            <button id="download-button" class="button button-secondary" type="button" disabled>
+              Download selected CSV
+            </button>
+          </div>
+          <p id="status-message" class="status-message">
+            Waiting for sample data or CSV upload.
+          </p>
+        </section>
+
+        <section class="card results-card">
+          <div class="section-heading">
+            <p class="step">4. Review output</p>
+            <h2>Select which drafts to keep</h2>
+          </div>
+          <div id="results-state" class="empty-state">
+            Generated drafts will appear here.
+          </div>
+          <div id="results-list" class="results-list hidden"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
